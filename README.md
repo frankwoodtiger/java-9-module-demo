@@ -6,13 +6,13 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
 ```com.greeting``` has a dependency of ```com.hello```. ```GreetingServiceImpl``` uses ```sayHello()``` method in HelloService.
 
 ### ```javac``` and ```java``` flags
-| Command | Flag          | Shorthand | Explanation                                                                                                                                                                                                                                                                                                                                                    |
-|---------|---------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| javac   | --module      | -m        | List of comma separated module names if we compile in multi-module mode, e.g. ```com.hello,com.greeting```                                                                                                                                                                                                                                                     |
-|         | --module-path | -p        | External module path that the module we compile depends on, e.g. ```com.hello/outDir```                                                                                                                                                                                                                                                                        |
-|         |               | -d        | Class output directory for class files                                                                                                                                                                                                                                                                                                                         |
-| java    | --module      | -m        | Executes the main class in a module specified by mainclass if it is given, or, if it is not given, the value in the module.  In other words, mainclass can be used when it is not specified by the module, or to override the value when it is specified. <br/>```java -m module[/mainclass]```                                                                |
-|         | --module-path | -p        | Specifies where to find application modules with a list of path elements. The elements of a module path can be a file path to a module or a directory containing modules. Each module is either a modular JAR or an exploded-module directory. <br/><br/>On Windows, semicolons (;) separate path elements in this list; on other platforms it is a colon (:). |
+| Command | Flag          | Shorthand | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                   |
+|---------|---------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| javac   | --module      | -m        | List of comma separated module names if we compile in multi-module mode, e.g. ```com.hello,com.greeting```                                                                                                                                                                                                                                                                                                                    |
+|         | --module-path | -p        | External module path that the module we compile depends on, e.g. ```com.hello/outDir```                                                                                                                                                                                                                                                                                                                                       |
+|         |               | -d        | Class output directory for class files                                                                                                                                                                                                                                                                                                                                                                                        |
+| java    | --module      | -m        | Executes the main class in a module specified by mainclass if it is given, or, if it is not given, the value in the module.  In other words, mainclass can be used when it is not specified by the module, or to override the value when it is specified. <br/>```java -m module-name[/mainclass]```<br/>where ```module-name``` is the module name and mainclass is the full package class name, e.g ```com.greeting.Main``` |
+|         | --module-path | -p        | Specifies where to find application modules with a list of path elements. The elements of a module path can be a file path to a module or a directory containing modules. Each module is either a modular JAR or an exploded-module directory. <br/><br/>On Windows, semicolons (;) separate path elements in this list; on other platforms it is a colon (:).                                                                |
 
 ### Method 1 - Compile and run together, the output directory is at root which is required for compiling using the ```-m``` (```---module```) flag (a.k.a in multi-module mode)
 * To compile all modules together
@@ -47,7 +47,7 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
   javac -d com.hello/outDir $(find com.hello -name "*.java")
   ```
   We cannot use this though as per JEP 261 the --module-source-path option (for compilation in "multi-module mode") must point to a directory that holds one subdirectory for each contained module, where the directory name must equal the module name.
-
+* 
   https://stackoverflow.com/questions/49476559/java-9-error-not-in-a-module-on-the-module-source-path
   ```
   javac -d com.hello/outDir -m com.hello --module-source-path "./*/src"
@@ -90,5 +90,25 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
       │       └── Main.class
       └── module-info.class
   ```
-Use ```clean-all.sh``` to clean all output directories if needed.
+### Package a jar from modules
+Modular JARs are just JARs with a module descriptor module-info.class.
+* To create a module jar from com.hello output
+  ```
+  jar -cvf jar/com.hello.jar -C outDir/com.hello .
+  ```
+* To create a module jar from com.greeting output
+  ```
+  jar -cvf jar/com.greeting.jar -C outDir/com.greeting .
+  ```
+
+* To run the jar (jar folder should contain com.greeting module and its dependent modules)
+  ```
+  java -p jar -m com.greeting/com.greeting.Main
+  ```
+
+#### Use ```clean-all.sh``` to clean all output directories if needed.
 ```sudo bash ./clean-all.sh```
+
+#### Use ```build-jar.sh``` to build using method 1 and create jar in jar folder in root.
+
+ 
