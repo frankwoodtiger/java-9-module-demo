@@ -5,7 +5,7 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
 
 ```com.greeting``` has a dependency of ```com.hello```. ```GreetingServiceImpl``` uses ```sayHello()``` method in HelloService.
 
-### ```javac``` and ```java``` flags
+### ```javac``` and ```java``` common flags
 | Command | Flag          | Shorthand | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |---------|---------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | javac   | --module      | -m        | List of comma separated module names if we compile in multi-module mode, e.g. ```com.hello,com.greeting```                                                                                                                                                                                                                                                                                                                    |
@@ -91,12 +91,23 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
       └── module-info.class
   ```
 ### Package a jar from modules
+#### ```jar [OPTION ...] [ [--release VERSION] [-C dir] files] ...```
+#### ```jar``` common flags
+| Flag                                   | Explanation                                                                                                              |
+|----------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| -C DIR                                 | Changes the specified directory and includes the files specified at the end of the command line.                         |
+| -c or --create                         | Creates the archive.                                                                                                     |
+| -v or --verbose                        | Sends or prints verbose output to standard output.                                                                       |
+| -f FILE or --file=FILE                 | Specifies the archive file name.                                                                                         |
+| -e CLASSNAME or --main-class=CLASSNAME | Specifies the application entry point for standalone applications bundled into a modular or executable modular JAR file. |
+
 Modular JARs are just JARs with a module descriptor module-info.class.
-* To create a module jar from com.hello output
+
+* To create a modular jar from com.hello output
   ```
   jar -cvf jar/com.hello.jar -C outDir/com.hello .
   ```
-* To create a module jar from com.greeting output
+* To create a modular jar from com.greeting output
   ```
   jar -cvf jar/com.greeting.jar -C outDir/com.greeting .
   ```
@@ -105,10 +116,9 @@ Modular JARs are just JARs with a module descriptor module-info.class.
   ```
   java -p jar -m com.greeting/com.greeting.Main
   ```
-
+### Build and cleanup
+#### Use ```build-jar.sh``` to build using method 1 and create jar in jar folder in root.
 #### Use ```clean-all.sh``` to clean all output directories if needed.
 ```sudo bash ./clean-all.sh```
-
-#### Use ```build-jar.sh``` to build using method 1 and create jar in jar folder in root.
 
  
