@@ -33,4 +33,4 @@ bin/
 ### Assuming you follow the instruction in README.md, you might have outDir everywhere when playing around
 outDir
 **/outDir
-jar/
+jarDir

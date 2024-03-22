@@ -1,10 +1,11 @@
-### Introduction
+## Introduction
 This is a Helloworld project that demonstrates how Java 9 modules works and how to compile and run them on command line. We have two modules
 1. ```com.hello```
 2. ```com.greeting```
 
 ```com.greeting``` has a dependency of ```com.hello```. ```GreetingServiceImpl``` uses ```sayHello()``` method in HelloService.
 
+## Compile using javac and run using java cli
 ### ```javac``` and ```java``` common flags
 | Command | Flag          | Shorthand | Explanation                                                                                                                                                                                                                                                                                                                                                                                                                   |
 |---------|---------------|-----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -90,7 +91,7 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
       │       └── Main.class
       └── module-info.class
   ```
-### Package a jar from modules
+## Package a jar from modules
 #### ```jar [OPTION ...] [ [--release VERSION] [-C dir] files] ...```
 #### ```jar``` common flags
 | Flag                                   | Explanation                                                                                                              |
@@ -102,20 +103,30 @@ This is a Helloworld project that demonstrates how Java 9 modules works and how 
 | -e CLASSNAME or --main-class=CLASSNAME | Specifies the application entry point for standalone applications bundled into a modular or executable modular JAR file. |
 
 Modular JARs are just JARs with a module descriptor module-info.class.
-
+* Assuming you have run ```javac``` to compile and have the class files in ```outDir```
 * To create a modular jar from com.hello output
   ```
-  jar -cvf jar/com.hello.jar -C outDir/com.hello .
+  jar -cvf jarDir/com.hello.jar -C outDir/com.hello .
   ```
+### Method 1 to create com.greeting.jar
 * To create a modular jar from com.greeting output
   ```
-  jar -cvf jar/com.greeting.jar -C outDir/com.greeting .
+  jar -cvf jarDir/com.greeting.jar -C outDir/com.greeting .
+  ```
+* To run the jar (jarDir folder should contain com.greeting module and its dependent modules)
+  ```
+  java -p jarDir -m com.greeting/com.greeting.Main
+  ```
+### Method 2 to create com.greeting.jar with main class set for execution entry
+* To create a modular jar from com.greeting and set main class with the e flag
+  ```
+   jar -cvfe jarDir/com.greeting.jar com.greeting.Main -C outDir/com.greeting .  
+  ```
+* To run the jar without the need of specifying main class
+  ```
+  java -p jarDir -m com.greeting
   ```
 
-* To run the jar (jar folder should contain com.greeting module and its dependent modules)
-  ```
-  java -p jar -m com.greeting/com.greeting.Main
-  ```
 ### Build and cleanup
 #### Use ```build-jar.sh``` to build using method 1 and create jar in jar folder in root.
 #### Use ```clean-all.sh``` to clean all output directories if needed.
