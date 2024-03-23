@@ -126,6 +126,10 @@ Modular JARs are just JARs with a module descriptor module-info.class.
   ```
   java -p jarDir -m com.greeting
   ```
+  with ```--show-module-resolution```
+  ```
+  java --show-module-resolution -p jarDir -m com.greeting 
+  ```
 
 ### Build and cleanup
 #### Use ```build-jar.sh``` to build using method 1 and create jar in jar folder in root.
